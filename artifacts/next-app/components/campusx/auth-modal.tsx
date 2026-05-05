@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { X, Mail, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react'
+import { isSupabaseConfigured, createClient } from '@/lib/supabase/client'
+import { X, Mail, Loader2, ShieldCheck, AlertTriangle, WifiOff } from 'lucide-react'
 
 interface AuthModalProps {
   onClose: () => void
 }
+
+const ALLOWED_DOMAIN = '@iitp.ac.in'
 
 export default function AuthModal({ onClose }: AuthModalProps) {
   const [email, setEmail] = useState('')
@@ -14,18 +16,23 @@ export default function AuthModal({ onClose }: AuthModalProps) {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
 
-  const supabase = createClient()
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
 
-    if (!email.endsWith('@iitp.ac.in')) {
-      setError('Only @iitp.ac.in email addresses are allowed.')
+    // Layer 1: Block non-IITP emails before they even hit Supabase
+    if (!email.endsWith(ALLOWED_DOMAIN)) {
+      setError('Access Denied: This platform is exclusive to IIT Patna students. Only @iitp.ac.in emails are accepted.')
+      return
+    }
+
+    if (!isSupabaseConfigured) {
+      setError('Authentication is not configured yet. Please contact the admin.')
       return
     }
 
     setLoading(true)
+    const supabase = createClient()
     const { error: authError } = await supabase.auth.signInWithOtp({
       email,
       options: {
@@ -59,7 +66,8 @@ export default function AuthModal({ onClose }: AuthModalProps) {
             </div>
             <h2 className="mb-2 text-xl font-bold text-white">Check your inbox</h2>
             <p className="text-sm text-gray-400">
-              We sent a magic link to <span className="font-medium text-white">{email}</span>.
+              We sent a magic link to{' '}
+              <span className="font-medium text-white">{email}</span>.
               Click it to sign in — no password needed.
             </p>
           </div>
@@ -74,6 +82,13 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 Exclusive to IIT Patna students
               </p>
             </div>
+
+            {!isSupabaseConfigured && (
+              <div className="mb-4 flex items-start gap-2 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-400">
+                <WifiOff className="mt-0.5 h-4 w-4 shrink-0" />
+                Auth not yet configured — add Supabase credentials to enable login.
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -112,7 +127,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
 
             <p className="mt-4 text-center text-xs text-gray-600">
               Only <span className="text-gray-400">@iitp.ac.in</span> addresses are accepted.
-              Non-IITP users will be automatically signed out.
+              Non-IITP users are automatically signed out.
             </p>
           </>
         )}

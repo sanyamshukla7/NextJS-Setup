@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Source_Serif_4 } from 'next/font/google'
 import { Suspense } from 'react'
 import './globals.css'
 import AccessDeniedBanner from '@/components/campusx/access-denied-banner'
+import AuthGuard from '@/components/campusx/auth-guard'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans', weight: ['100','200','300','400','500','600','700','800','900'] })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['100','200','300','400','500','600','700','800','900'] })
@@ -21,6 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${sourceSerif4.variable} bg-gray-950`}>
       <body className="font-sans antialiased bg-gray-950">
+        {/* Client-side domain enforcer — signs out any non-@iitp.ac.in session */}
+        <AuthGuard />
+        {/* Shows "Exclusive to IITP Students" banner on ?error=access_denied */}
         <Suspense>
           <AccessDeniedBanner />
         </Suspense>

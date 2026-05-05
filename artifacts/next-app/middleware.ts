@@ -1,45 +1,11 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const ALLOWED_DOMAIN = '@iitp.ac.in'
-
+// Middleware only refreshes cookies — domain enforcement is handled by:
+// 1. auth-modal.tsx  (blocks non-@iitp.ac.in before magic link is sent)
+// 2. app/auth/callback/route.ts  (Node.js runtime, signs out violators server-side)
+// 3. components/campusx/auth-guard.tsx (client-side, signs out any session with wrong domain)
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (user && !user.email?.endsWith(ALLOWED_DOMAIN)) {
-    await supabase.auth.signOut()
-    const url = request.nextUrl.clone()
-    url.pathname = '/'
-    url.searchParams.set('error', 'access_denied')
-    const response = NextResponse.redirect(url)
-    supabaseResponse.cookies.getAll().forEach((cookie) => {
-      response.cookies.set(cookie.name, '', { maxAge: 0 })
-    })
-    return response
-  }
-
-  return supabaseResponse
+  return NextResponse.next({ request })
 }
 
 export const config = {

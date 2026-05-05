@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ShoppingBag, Menu, X, Search, Bell, LogOut, User } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { isSupabaseConfigured, createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import AuthModal from './auth-modal'
 
@@ -10,17 +10,20 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
-  const supabase = createClient()
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return
+    const supabase = createClient()
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => setUser(session?.user ?? null)
+    )
     return () => subscription.unsubscribe()
   }, [])
 
   async function handleSignOut() {
+    if (!isSupabaseConfigured) return
+    const supabase = createClient()
     await supabase.auth.signOut()
     setUser(null)
   }
@@ -59,9 +62,9 @@ export default function Navbar() {
 
               {user ? (
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 rounded-lg border border-white/15 px-3 py-1.5">
+                  <div className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5">
                     <User className="h-4 w-4 text-pink-400" />
-                    <span className="max-w-[140px] truncate text-xs text-gray-300">{user.email}</span>
+                    <span className="max-w-[160px] truncate text-xs text-gray-300">{user.email}</span>
                   </div>
                   <button
                     onClick={handleSignOut}
@@ -81,7 +84,7 @@ export default function Navbar() {
               )}
 
               <button
-                onClick={() => user ? null : setShowAuth(true)}
+                onClick={() => setShowAuth(true)}
                 className="rounded-lg bg-pink-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-pink-400 hover:shadow-pink-500/30 active:scale-95"
               >
                 Sell
@@ -118,7 +121,7 @@ export default function Navbar() {
                   <button onClick={() => { setShowAuth(true); setMenuOpen(false) }} className="flex-1 rounded-lg border border-white/20 py-2 text-sm font-medium text-white hover:bg-white/10">
                     Log in
                   </button>
-                  <button onClick={() => { setShowAuth(true); setMenuOpen(false) }} className="flex-1 rounded-lg bg-pink-500 py-2 text-center text-sm font-semibold text-white hover:bg-pink-400">
+                  <button onClick={() => { setShowAuth(true); setMenuOpen(false) }} className="flex-1 rounded-lg bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">
                     Sell
                   </button>
                 </div>
