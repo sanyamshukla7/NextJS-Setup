@@ -6,7 +6,11 @@ import { isSupabaseConfigured, createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import AuthModal from './auth-modal'
 
-export default function Navbar() {
+interface NavbarProps {
+  onSell?: () => void
+}
+
+export default function Navbar({ onSell }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
@@ -84,7 +88,7 @@ export default function Navbar() {
               )}
 
               <button
-                onClick={() => setShowAuth(true)}
+                onClick={onSell}
                 className="rounded-lg bg-pink-500 px-5 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-pink-400 hover:shadow-pink-500/30 active:scale-95"
               >
                 Sell
@@ -121,7 +125,7 @@ export default function Navbar() {
                   <button onClick={() => { setShowAuth(true); setMenuOpen(false) }} className="flex-1 rounded-lg border border-white/20 py-2 text-sm font-medium text-white hover:bg-white/10">
                     Log in
                   </button>
-                  <button onClick={() => { setShowAuth(true); setMenuOpen(false) }} className="flex-1 rounded-lg bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">
+                  <button onClick={() => { onSell?.(); setMenuOpen(false) }} className="flex-1 rounded-lg bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">
                     Sell
                   </button>
                 </div>

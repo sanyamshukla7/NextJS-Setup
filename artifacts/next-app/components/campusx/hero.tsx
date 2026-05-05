@@ -1,6 +1,12 @@
+'use client'
+
 import { Search, ArrowRight, Tag, Users, ShieldCheck } from 'lucide-react'
 
-export default function Hero() {
+interface HeroProps {
+  onSell?: () => void
+}
+
+export default function Hero({ onSell }: HeroProps) {
   return (
     <section className="relative overflow-hidden bg-gray-950 pb-20 pt-16">
       {/* Background glow */}
@@ -37,7 +43,7 @@ export default function Hero() {
             placeholder="Search textbooks, laptops, cycles…"
             className="flex-1 bg-transparent px-3 py-3.5 text-sm text-white placeholder-gray-500 outline-none"
           />
-          <button className="m-1.5 rounded-lg bg-pink-500 px-5 py-2 text-sm font-semibold text-white hover:bg-pink-400 transition-colors">
+          <button className="m-1.5 rounded-lg bg-pink-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-pink-400">
             Search
           </button>
         </div>
@@ -46,19 +52,18 @@ export default function Hero() {
         <div className="flex flex-wrap justify-center gap-3">
           <a
             href="#listings"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
             Browse Items
             <ArrowRight className="h-4 w-4" />
           </a>
-          <a
-            id="sell"
-            href="#sell"
-            className="inline-flex items-center gap-2 rounded-lg bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 hover:bg-pink-400 transition-all active:scale-95"
+          <button
+            onClick={onSell}
+            className="inline-flex items-center gap-2 rounded-lg bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 transition-all hover:bg-pink-400 active:scale-95"
           >
             <Tag className="h-4 w-4" />
             Sell Something
-          </a>
+          </button>
         </div>
 
         {/* Stats */}
