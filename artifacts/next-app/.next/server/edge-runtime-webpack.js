@@ -23,8 +23,8 @@
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			loaded: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
@@ -40,9 +40,6 @@
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
 /******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
@@ -57,6 +54,11 @@
 /******/ 	__webpack_require__.i = [];
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/amd options */
+/******/ 	(() => {
+/******/ 		__webpack_require__.amdO = {};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
 /******/ 		var deferred = [];
@@ -89,6 +91,18 @@
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -110,23 +124,14 @@
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/get mini-css chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.miniCssF = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return undefined;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/get update manifest filename */
 /******/ 	(() => {
-/******/ 		__webpack_require__.hmrF = () => ("static/webpack/" + __webpack_require__.h() + ".webpack.hot-update.json");
+/******/ 		__webpack_require__.hmrF = () => ("static/webpack/" + __webpack_require__.h() + ".edge-runtime-webpack.hot-update.json");
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("32897a290fe8bd18")
+/******/ 		__webpack_require__.h = () => ("3ece862be68488e2")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -172,7 +177,7 @@
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
 /******/ 		
-/******/ 				script.src = __webpack_require__.tu(url);
+/******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
 /******/ 			var onScriptComplete = (prev, event) => {
@@ -201,43 +206,6 @@
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/node module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nmd = (module) => {
-/******/ 			module.paths = [];
-/******/ 			if (!module.children) module.children = [];
-/******/ 			return module;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/trusted types policy */
-/******/ 	(() => {
-/******/ 		var policy;
-/******/ 		__webpack_require__.tt = () => {
-/******/ 			// Create Trusted Type policy if Trusted Types are available and the policy doesn't exist yet.
-/******/ 			if (policy === undefined) {
-/******/ 				policy = {
-/******/ 					createScript: (script) => (script),
-/******/ 					createScriptURL: (url) => (url)
-/******/ 				};
-/******/ 				if (typeof trustedTypes !== "undefined" && trustedTypes.createPolicy) {
-/******/ 					policy = trustedTypes.createPolicy("nextjs#bundler", policy);
-/******/ 				}
-/******/ 			}
-/******/ 			return policy;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/trusted types script */
-/******/ 	(() => {
-/******/ 		__webpack_require__.ts = (script) => (__webpack_require__.tt().createScript(script));
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/trusted types script url */
-/******/ 	(() => {
-/******/ 		__webpack_require__.tu = (url) => (__webpack_require__.tt().createScriptURL(url));
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hot module replacement */
@@ -636,133 +604,6 @@
 /******/ 		__webpack_require__.p = "/_next/";
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/react refresh */
-/******/ 	(() => {
-/******/ 		if (__webpack_require__.i) {
-/******/ 		__webpack_require__.i.push((options) => {
-/******/ 			const originalFactory = options.factory;
-/******/ 			options.factory = (moduleObject, moduleExports, webpackRequire) => {
-/******/ 				const hasRefresh = typeof self !== "undefined" && !!self.$RefreshInterceptModuleExecution$;
-/******/ 				const cleanup = hasRefresh ? self.$RefreshInterceptModuleExecution$(moduleObject.id) : () => {};
-/******/ 				try {
-/******/ 					originalFactory.call(this, moduleObject, moduleExports, webpackRequire);
-/******/ 				} finally {
-/******/ 					cleanup();
-/******/ 				}
-/******/ 			}
-/******/ 		})
-/******/ 		}
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	
-/******/ 	// noop fns to prevent runtime errors during initialization
-/******/ 	if (typeof self !== "undefined") {
-/******/ 		self.$RefreshReg$ = function () {};
-/******/ 		self.$RefreshSig$ = function () {
-/******/ 			return function (type) {
-/******/ 				return type;
-/******/ 			};
-/******/ 		};
-/******/ 	}
-/******/ 	
-/******/ 	/* webpack/runtime/css loading */
-/******/ 	(() => {
-/******/ 		var createStylesheet = (chunkId, fullhref, resolve, reject) => {
-/******/ 			var linkTag = document.createElement("link");
-/******/ 		
-/******/ 			linkTag.rel = "stylesheet";
-/******/ 			linkTag.type = "text/css";
-/******/ 			var onLinkComplete = (event) => {
-/******/ 				// avoid mem leaks.
-/******/ 				linkTag.onerror = linkTag.onload = null;
-/******/ 				if (event.type === 'load') {
-/******/ 					resolve();
-/******/ 				} else {
-/******/ 					var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 					var realHref = event && event.target && event.target.href || fullhref;
-/******/ 					var err = new Error("Loading CSS chunk " + chunkId + " failed.\n(" + realHref + ")");
-/******/ 					err.code = "CSS_CHUNK_LOAD_FAILED";
-/******/ 					err.type = errorType;
-/******/ 					err.request = realHref;
-/******/ 					linkTag.parentNode.removeChild(linkTag)
-/******/ 					reject(err);
-/******/ 				}
-/******/ 			}
-/******/ 			linkTag.onerror = linkTag.onload = onLinkComplete;
-/******/ 			linkTag.href = fullhref;
-/******/ 		
-/******/ 			(function(linkTag) {
-/******/ 			                if (typeof _N_E_STYLE_LOAD === 'function') {
-/******/ 			                    const { href, onload, onerror } = linkTag;
-/******/ 			                    _N_E_STYLE_LOAD(href.indexOf(window.location.origin) === 0 ? new URL(href).pathname : href).then(()=>onload == null ? void 0 : onload.call(linkTag, {
-/******/ 			                            type: 'load'
-/******/ 			                        }), ()=>onerror == null ? void 0 : onerror.call(linkTag, {}));
-/******/ 			                } else {
-/******/ 			                    document.head.appendChild(linkTag);
-/******/ 			                }
-/******/ 			            })(linkTag)
-/******/ 			return linkTag;
-/******/ 		};
-/******/ 		var findStylesheet = (href, fullhref) => {
-/******/ 			var existingLinkTags = document.getElementsByTagName("link");
-/******/ 			for(var i = 0; i < existingLinkTags.length; i++) {
-/******/ 				var tag = existingLinkTags[i];
-/******/ 				var dataHref = tag.getAttribute("data-href") || tag.getAttribute("href");
-/******/ 				if(tag.rel === "stylesheet" && (dataHref === href || dataHref === fullhref)) return tag;
-/******/ 			}
-/******/ 			var existingStyleTags = document.getElementsByTagName("style");
-/******/ 			for(var i = 0; i < existingStyleTags.length; i++) {
-/******/ 				var tag = existingStyleTags[i];
-/******/ 				var dataHref = tag.getAttribute("data-href");
-/******/ 				if(dataHref === href || dataHref === fullhref) return tag;
-/******/ 			}
-/******/ 		};
-/******/ 		var loadStylesheet = (chunkId) => {
-/******/ 			return new Promise((resolve, reject) => {
-/******/ 				var href = __webpack_require__.miniCssF(chunkId);
-/******/ 				var fullhref = __webpack_require__.p + href;
-/******/ 				if(findStylesheet(href, fullhref)) return resolve();
-/******/ 				createStylesheet(chunkId, fullhref, resolve, reject);
-/******/ 			});
-/******/ 		}
-/******/ 		// no chunk loading
-/******/ 		
-/******/ 		var oldTags = [];
-/******/ 		var newTags = [];
-/******/ 		var applyHandler = (options) => {
-/******/ 			return { dispose: () => {
-/******/ 				for(var i = 0; i < oldTags.length; i++) {
-/******/ 					var oldTag = oldTags[i];
-/******/ 					if(oldTag.parentNode) oldTag.parentNode.removeChild(oldTag);
-/******/ 				}
-/******/ 				oldTags.length = 0;
-/******/ 			}, apply: () => {
-/******/ 				for(var i = 0; i < newTags.length; i++) newTags[i].rel = "stylesheet";
-/******/ 				newTags.length = 0;
-/******/ 			} };
-/******/ 		}
-/******/ 		__webpack_require__.hmrC.miniCss = (chunkIds, removedChunks, removedModules, promises, applyHandlers, updatedModulesList) => {
-/******/ 			applyHandlers.push(applyHandler);
-/******/ 			chunkIds.forEach((chunkId) => {
-/******/ 				var href = __webpack_require__.miniCssF(chunkId);
-/******/ 				var fullhref = __webpack_require__.p + href;
-/******/ 				var oldTag = findStylesheet(href, fullhref);
-/******/ 				if(!oldTag) return;
-/******/ 				promises.push(new Promise((resolve, reject) => {
-/******/ 					var tag = createStylesheet(chunkId, fullhref, () => {
-/******/ 						tag.as = "style";
-/******/ 						tag.rel = "preload";
-/******/ 						resolve();
-/******/ 					}, reject);
-/******/ 					oldTags.push(oldTag);
-/******/ 					newTags.push(tag);
-/******/ 				}));
-/******/ 			});
-/******/ 		}
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
 /******/ 		// no baseURI
@@ -771,7 +612,7 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = __webpack_require__.hmrS_jsonp = __webpack_require__.hmrS_jsonp || {
-/******/ 			"webpack": 0
+/******/ 			"edge-runtime-webpack": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
