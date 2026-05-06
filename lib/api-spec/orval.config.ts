@@ -1,3 +1,9 @@
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 import { defineConfig, InputTransformerFn } from "orval";
 import path from "path";
 
@@ -58,10 +64,10 @@ export default defineConfig({
       override: {
         zod: {
           coerce: {
-            query: ['boolean', 'number', 'string'],
-            param: ['boolean', 'number', 'string'],
-            body: ['bigint', 'date'],
-            response: ['bigint', 'date'],
+            query: ["boolean", "number", "string"],
+            param: ["boolean", "number", "string"],
+            body: ["bigint", "date"],
+            response: ["bigint", "date"],
           },
         },
         useDates: true,
